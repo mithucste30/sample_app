@@ -3,6 +3,10 @@ require 'spec_helper'
 describe PagesController do
 
   render_views
+
+  before(:each) do
+    @base_title="My title"
+  end
   
   describe "GET 'home'" do
     it "should be successful" do
@@ -12,7 +16,7 @@ describe PagesController do
     it "should be successful" do
       get 'home'
       response.should have_selector("title",
-        :content => "My Title | Home")
+        :content => "#{@base_title} | Home")
     end
 
     it "Body must not be empty" do
@@ -30,7 +34,7 @@ describe PagesController do
     it "should be successful" do
       get 'contact'
       response.should have_selector("title",
-        :content => "My Title | Contact")
+        :content => "#{@base_title} | Contact")
     end
   end
 
@@ -42,7 +46,7 @@ describe PagesController do
     it "should be successful" do
       get 'about'
       response.should have_selector("title",
-        :content => "My Title | About")
+        :content => "#{@base_title} | About")
     end
   end
 
