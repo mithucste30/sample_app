@@ -16,8 +16,9 @@ group :development do
 
 group :test do
  gem 'rspec','2.0.0.beta.18'
- gem 'spork'
- gem 'webrat'
+ gem 'spork','0.8.4'
+ gem 'webrat', '0.7.1'
  gem 'autotest'
  gem 'autotest-growl'
+ gem 'autotest-fsevent'
 end
