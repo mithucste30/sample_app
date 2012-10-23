@@ -20,6 +20,21 @@ render_views
       assigns(:user).should == @user # here :user is the value at the controller>>@user. and on the right hand side @user is the value of the :user in the factory.matching that we are getting the right user.
     end
 
+    it "should have the right title" do
+      get :show, :id => @user.id
+      response.should have_selector('title', :content => @user.name)
+    end
+
+    it "should have the user's name" do
+      get :show, :id => @user.id
+      response.should have_selector("h1", :content => @user.name)
+    end
+
+    it "should have  a profile image" do
+      get :show, :id => @user.id
+      response.should have_selector('h1>img', :class => "gravatar")
+    end
+
   end
 
   describe "GET 'new'" do
