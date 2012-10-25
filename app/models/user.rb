@@ -21,7 +21,7 @@ class User < ActiveRecord::Base
 
 	validates :email, :presence   => true,
 					  :format     => { :with => email_regex },
-					  :uniqueness => { :case_sensitive => false }
+					  :uniqueness => { :case_sensitive => false }  
 
 	validates :password, :presence =>true,
 						 :confirmation => true,
@@ -34,7 +34,7 @@ class User < ActiveRecord::Base
 	end
 
 	class << self
-		def authenticate(email, submitted_password)
+		def authenticate(email, submitted_password)										
  			user = find_by_email(email)
  			return nil  if user.nil?
  			return user if user.has_password?(submitted_password) 
