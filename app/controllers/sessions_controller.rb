@@ -1,6 +1,6 @@
 class SessionsController < ApplicationController
   def new
-  @title = "Sign In"
+    @title = "Sign In"
   end
 
   def create
@@ -10,12 +10,12 @@ class SessionsController < ApplicationController
   		flash.now[:error]= "Invalid Email/Password combination"
 		@title = "Sign In"
 		render 'new'
-	else
-		#handle sigin process
-	end
+	  else
+      sign_in user
+      redirect_to user	
+	  end
   end
 
   def destroy
   end
-
 end
