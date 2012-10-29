@@ -5,7 +5,8 @@
             <li><%= link_to "Home", root_path %></li>
             <% if signed_in? %>
             <li><%= link_to "Profile", user_path(current_user) %></li>
-            <% # the above line can also be written  as %>
+            <li><%= link_to "Settings", edit_user_path(current_user) %></li>
+            <% # the above profile line can also be written  as %>
             <% #<%= link_to "Profile", current_user, we implemented current_user varaible in the contxt of class(self) that we can use that in here(views):D understood?
 			%>          
             <% end %>

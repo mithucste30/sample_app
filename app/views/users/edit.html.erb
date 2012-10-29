@@ -1,0 +1,17 @@
+<h1>Edit user</h1>
+<%= form_for (@user) do |f| %>
+
+	<%= render 'fields', :f => f %>
+
+<div class ='action'>
+	<%= f.submit "Update"  %>
+</div>
+
+<div>
+	<%= gravatar_for @user %>
+	<a href="http://gravatar.com/emails" target=_blank>change</a>
+</div>	
+<% end %>
+
+<% # to pass the form_for line f to the partials,:f => f used, the first f is the variable at the partials and the right hand side f is the variable is here.it means that "render the f(at the partial) as f(here)%>
+
