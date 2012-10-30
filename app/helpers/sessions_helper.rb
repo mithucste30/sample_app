@@ -21,6 +21,19 @@ module SessionsHelper
     current_user = nil
   end
 
+  def redirect_back_or(default)
+    redirect_to(session[:return_to] || default)
+    clear_return_to
+  end
+
+  def clear_return_to
+    session[:return_to] = nil
+  end
+
+  def current_user?(user)
+    user == current_user
+  end
+
   private
 
   def user_from_remember_token

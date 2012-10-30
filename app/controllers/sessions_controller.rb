@@ -12,8 +12,13 @@ class SessionsController < ApplicationController
 		render 'new'
 	  else
       sign_in user
-      redirect_to user	
+      redirect_back_or(user)
+      clear_return_to
 	  end
+  end
+
+  def clear_return_to
+    session[:return_to] = nil
   end
 
   def destroy
