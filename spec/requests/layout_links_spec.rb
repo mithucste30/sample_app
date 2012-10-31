@@ -78,7 +78,7 @@ describe "LayoutLinks" do
 		end
 
 		it "should have a users path" do
-			visit user_path
+			visit users_path
 			response.should have_selector("a", :href => users_path,
 											   :content => "Users")
 		end
