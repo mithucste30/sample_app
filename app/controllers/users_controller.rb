@@ -1,7 +1,8 @@
 class UsersController < ApplicationController
 
-  before_filter :authenticate, :only => [:index, :edit, :update]
+  before_filter :authenticate, :only => [:index, :edit, :update, :destroy]
   before_filter :correct_user, :only => [:edit, :update]
+  before_filter :admin_user ,  :only => :destroy
 
   def index
     @users = User.paginate(:page => params[:page])
@@ -33,12 +34,12 @@ class UsersController < ApplicationController
   end
 
   def edit
-    @user = User.find(params[:id])
+    # @user = User.find(params[:id]) this will still work bcoz we added before filter coorect_user, look up,and the correct user contailns this line, look below.so this inherits the id and other user property from that correct_user.
     @title = "Edit user"
   end
 
   def update
-    @user = User.find(params[:id])
+    # @user = User.find(params[:id]) this will still work bcoz we added before filter coorect_user, look up,and the correct user contailns this line, look below.so this inherits the id and other user property from that correct_user.
     if @user.update_attributes(params[:user])
       redirect_to @user
       flash[:success] = "Successfully Updated"
@@ -46,6 +47,12 @@ class UsersController < ApplicationController
     @title = "Edit user"
     render 'edit'
   end
+  end
+
+  def destroy
+    User.find(params[:id]).destroy
+    flash[:success] = "User destroyed !"
+    redirect_to(users_path)
   end
 
   private
@@ -66,6 +73,11 @@ class UsersController < ApplicationController
 
   def store_location
     session[:return_to] = request.fullpath
+  end
+
+  def admin_user
+    user = User.find(params[:id])
+    redirect_to(root_path) if (!current_user.admin? || current_user?(user))
   end
 
   

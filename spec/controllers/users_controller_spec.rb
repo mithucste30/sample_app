@@ -52,6 +52,21 @@ render_views
         response.should have_selector('a', :href => "/users?page=2",
                                            :content => "Next")
       end
+
+      it "should have delete links for the admin" do
+        @user.toggle(:admin)
+        other_user = User.all.second
+        get :index
+        response.should have_selector('a', :href => user_path(other_user),
+                                           :content => 'delete')
+      end
+
+      it "should not have delete links for the admin" do
+        other_user = User.all.second
+        get :index
+        response.should_not have_selector('a', :href => user_path(other_user),
+                                           :content => 'delete')
+      end
     end
   end
 
@@ -247,6 +262,56 @@ render_views
       it "should require matching user to update" do
         put :update , :id => @user, :user => {}
         response.should redirect_to(root_path)
+      end
+    end
+  end
+
+  describe "DELETE 'destroy'" do
+
+    before(:each) do
+      @user = Factory(:user)
+    end
+
+    describe "for non-signed-in users" do
+
+      it "should deny-access" do
+        delete :destroy, :id => @user
+        response.should redirect_to(signin_path)
+      end
+    end
+
+    describe "non-admin users" do
+
+      it "should protect the action" do
+        test_sign_in(@user)
+        delete :destroy, :id => @user
+        response.should redirect_to(root_path)
+      end
+    end
+
+    describe "as a admin user" do
+      before(:each) do
+        @admin = Factory(:user, :email => "admin@example.com", :admin => true )
+        test_sign_in(@admin)
+      end
+
+      it "should destroy the user" do
+        lambda do
+          delete :destroy, :id => @user
+        end.should change(User, :count).by(-1)
+      end
+
+
+      it "should redirect to the users(index page)" do
+        delete :destroy, :id => @user
+        flash[:success].should =~ /destroyed/i
+        response.should redirect_to(users_path)
+      end
+
+      it "should not delete itself" do
+        lambda do
+          delete :destroy, :id => @admin
+        end.should_not change(User, :count)
       end
     end
   end
