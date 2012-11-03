@@ -50,7 +50,8 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    User.find(params[:id]).destroy
+    # @user = User.find(params[:id]) this will still work bcoz we added before filter coorect_user, look up,and the correct user contailns this line, look below.so this inherits the id and other user property from that correct_user.
+    @user.destroy
     flash[:success] = "User destroyed !"
     redirect_to(users_path)
   end
@@ -76,8 +77,8 @@ class UsersController < ApplicationController
   end
 
   def admin_user
-    user = User.find(params[:id])
-    redirect_to(root_path) if (!current_user.admin? || current_user?(user))
+    @user = User.find(params[:id])
+    redirect_to(root_path) if (!current_user.admin? || current_user?(@user))
   end
 
   

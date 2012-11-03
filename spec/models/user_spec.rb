@@ -34,10 +34,6 @@ describe User do
   	no_name_user.should_not be_valid
   end
 
-  it "should require a name" do
-  	no_email_user = User.new(@attr.merge(:email => ""))
-  	no_email_user.should_not be_valid
-  end
 
   it "name length must be under 50" do
   	long_name = "a" * 51
@@ -185,4 +181,29 @@ describe User do
       @user.should be_admin
     end
   end
+
+  describe "micropost associations" do
+
+    before(:each) do
+      @user = User.create!(@attr)
+      @mp1 = Factory(:micropost, :user => @user, :created_at => 1.day.ago)
+      @mp2 = Factory(:micropost, :user => @user, :created_at => 1.hour.ago)
+    end
+
+    it "should have a micropost attribute" do
+      @user.should respond_to(:microposts)
+    end
+
+    it "should have the right micropost in the right order" do
+      @user.microposts.should == [@mp2, @mp1]
+    end
+
+    it "should delete the associative microposts" do
+      @user.destroy
+      # [@mp1, @mp2].each do |micropost|
+        Micropost.find_by_id(@mp1.id).should be_nil
+        Micropost.find_by_id(@mp2.id).should be_nil
+      # end
+    end
+  end  
 end
