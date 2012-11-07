@@ -341,4 +341,37 @@ render_views
       end
     end
   end
+
+  describe "when not signed in" do
+    
+    it "should not show following" do
+      get :following, :id => 1
+      response.should_not be_success
+    end
+
+    it "should not show followed" do
+      get :followers, :id => 1
+      response.should_not be_success
+    end
+  end
+
+  describe "when signed in" do
+    before(:each) do
+      @user = test_sign_in(Factory(:user))
+      @another_user = test_sign_in(Factory(:user, :email => Factory.next(:email)))
+      @user.follow!(@another_user)
+    end
+
+    it "should show following" do
+      get :following, :id => @user
+      response.should have_selector('a', :href => user_path(@another_user),
+                                                :content => @another_user.name)
+    end
+
+    it "should show followers" do
+      get :followers, :id => @another_user
+      response.should have_selector('a', :href => user_path(@user),
+                                                :content => @user.name)
+    end
+  end
 end
