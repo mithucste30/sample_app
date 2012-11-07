@@ -224,4 +224,52 @@ describe User do
       end
     end  
   end
+
+  describe "relationships" do
+    before(:each) do
+      @user = User.create!(@attr)
+      @followed = Factory(:user)
+    end
+
+    it "should have a relationship method" do
+      @user.should respond_to(:relationships)
+    end
+
+    it "should have a following method" do
+      @user.should respond_to(:following)
+    end
+
+    it "should follow a user" do # why a user have to follow someone???right??if a user doesn't follow anyone then how can we test this??
+      @user.follow!(@followed)  # by writting this line we are making a user to follow :D.so by writing this line we are making a relationship.so watch in the user.rb file.we are making this line true by writng such that creates a relationship. relationship.create!(followed_id).why followed id?? coz here in this line @user is the follower.so we already a follower.all we need is a followed id.
+      @user.should be_following(@followed)
+    end
+
+    it "should include the followed user in the following array" do
+      @user.follow!(@followed)
+      @user.following.should include(@followed)
+    end
+
+    it "should have an unfollow! method" do
+      @user.should respond_to(:unfollow!)
+    end
+
+    it "should unfollow a user" do
+      @user.follow!(@followed)
+      @user.unfollow!(@followed)
+      @user.should_not be_following(@followed)
+    end
+
+    it "should have a reverse_relationships" do
+      @user.should respond_to(:reverse_relationships)
+    end
+
+    it "should have a follower method" do
+      @user.should respond_to(:follower)
+    end
+
+    it "should include follower in the follower array" do
+      @user.follow!(@followed)
+      @followed.followers.should include(@user)
+    end
+  end
 end
